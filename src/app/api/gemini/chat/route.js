@@ -2,15 +2,7 @@ import Chat from "@/models/Chat";
 import connectToDatabase from "@/utils/db";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-import {GoogleGenAI} from '@google/genai'
-
-const genAI = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
-
-if (!process.env.GEMINI_API_KEY) {
-  console.warn("[Gemini][Init] Warning: GEMINI_API_KEY is not set.");
-}
+import { genAI } from "@/config/ai";
 
 export async function POST(req) {
   console.log("[Gemini][POST] Start handling request");

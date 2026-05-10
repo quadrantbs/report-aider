@@ -1,10 +1,6 @@
-import { GoogleGenAI } from "@google/genai";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-
-const genAI = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
+import { genAI } from "@/config/ai";
 
 export async function POST(req) {
   const token = await getToken({ req });
