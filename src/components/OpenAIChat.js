@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const OpenAIChat = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -81,7 +83,39 @@ const OpenAIChat = () => {
   };
 
   const copyText = (text) => {
-    navigator.clipboard.writeText(text).then(() => {
+    const stripMarkdown = (md) => {
+      if (!md) return "";
+      let s = String(md);
+      // Remove fenced code blocks
+      s = s.replace(/```[\s\S]*?```/g, "");
+      // Inline code
+      s = s.replace(/`([^`]+)`/g, "$1");
+      // Images: keep alt text
+      s = s.replace(/!\[([^\]]*)\]\([^\)]+\)/g, "$1");
+      // Links: keep link text
+      s = s.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1");
+      // Headings
+      s = s.replace(/^\s{0,3}#{1,6}\s+/gm, "");
+      // Blockquotes
+      s = s.replace(/^>\s?/gm, "");
+      // Bold/italic
+      s = s.replace(/(\*\*|__)(.*?)\1/g, "$2");
+      s = s.replace(/(\*|_)(.*?)\1/g, "$2");
+      s = s.replace(/~~(.*?)~~/g, "$1");
+      // Lists
+      s = s.replace(/^\s*[-*+]\s+/gm, "");
+      s = s.replace(/^\s*\d+\.\s+/gm, "");
+      // Remove any leftover HTML tags
+      s = s.replace(/<[^>]+>/g, "");
+      // Normalize multiple blank lines
+      s = s.replace(/\n{3,}/g, "\n\n");
+      // Trim each line and overall
+      s = s.split('\n').map(l => l.trimEnd()).join('\n').trim();
+      return s;
+    };
+
+    const plain = stripMarkdown(text);
+    navigator.clipboard.writeText(plain).then(() => {
       alert("Text copied to clipboard!");
     });
   };
@@ -122,18 +156,16 @@ const OpenAIChat = () => {
                 {messages?.map((msg, index) => (
                   <div
                     key={index}
-                    className={`chat ${
-                      msg.role === "user" ? "chat-end" : "chat-start"
-                    }`}
+                    className={`chat ${msg.role === "user" ? "chat-end" : "chat-start"}`}
                   >
                     <div
                       className={`chat-bubble ${
-                        msg.role === "user"
-                          ? "bg-accent text-accent-content"
-                          : "bg-neutral text-neutral-content"
+                        msg.role === "user" ? "bg-accent text-accent-content" : "bg-neutral text-neutral-content"
                       }`}
                     >
-                      {msg.content}
+                      <div className="prose max-w-none">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                      </div>
                       {msg.role === "assistant" && (
                         <button
                           className="btn btn-xs btn-outline btn-secondary ml-2"

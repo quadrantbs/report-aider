@@ -2,9 +2,11 @@ import Chat from "@/models/Chat";
 import connectToDatabase from "@/utils/db";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import {GoogleGenAI} from '@google/genai'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
 if (!process.env.GEMINI_API_KEY) {
   console.warn("[Gemini][Init] Warning: GEMINI_API_KEY is not set.");
@@ -36,15 +38,15 @@ export async function POST(req) {
       );
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+    // create a stateful chat session via the SDK
 
     // The system prompt should be the first message in the history for Gemini
     const systemPrompt = {
-      role: "user",
+      role: "model",
       parts: [
         {
           text:
-            "You are AIder, an AI assistant specialized in helping create reports. Assist in generating a clear, structured, and detailed report on any topic provided. Incorporate relevant data, analysis, and insights while ensuring the content aligns with the given context, audience, and objectives.",
+            "Kamu adalah AIder, asisten AI yang berfokus pada pembuatan laporan. Tugasmu adalah membantu menghasilkan laporan yang jelas, terstruktur, dan informatif berdasarkan topik yang diberikan. Sertakan data, analisis, dan wawasan yang relevan, serta pastikan isi laporan sesuai dengan konteks, audiens, dan tujuan yang ditentukan. Gunakan gaya penulisan yang ringkas, padat, dan hindari penjelasan yang tidak perlu.",
         },
       ],
     };
@@ -69,13 +71,13 @@ export async function POST(req) {
 
     console.log("[Gemini][POST] Including prior history messages:", recentHistory.length);
 
-    const chat = model.startChat({
+    const chat = genAI.chats.create({
+      model: "gemini-2.5-flash-lite",
       history: [
         systemPrompt,
-        { role: "model", parts: [{ text: "Okay, I'm ready to assist you in creating reports." }] },
         ...recentHistory,
       ],
-      generationConfig: {
+      config: {
         maxOutputTokens: 4096,
       },
     });
@@ -83,11 +85,10 @@ export async function POST(req) {
     console.log("[Gemini][POST] Chat started with model");
 
     const lastUserMessage = formattedMessages[formattedMessages.length - 1];
-    const result = await chat.sendMessage(lastUserMessage.parts[0].text);
+    const result = await chat.sendMessage({ message: lastUserMessage.parts[0].text });
     console.log("[Gemini][POST] Sent message to Gemini");
 
-    const response = await result.response;
-    const responseMessage = response.text();
+    const responseMessage = result?.text ?? "";
 
     console.log("[Gemini][POST] Received response from Gemini. Length:", responseMessage?.length || 0);
 
