@@ -11,19 +11,19 @@ const reportSchema = new mongoose.Schema(
     cc: {
       type: [String],
       required: true,
-      default: ["KM 02", "KM 03"],
+      default: ["KM 02 dan KM 03"],
       trim: true,
     },
     from: {
       type: String,
       required: true,
-      default: "LMG 01",
+      default: "KBPOL",
       trim: true,
     },
     field: {
       type: String,
       required: true,
-      default: "Sosbud",
+      default: "Politik",
       trim: true,
     },
     code: {
