@@ -44,9 +44,9 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="p-6 bg-base-100 text-base-content h-screen flex justify-center items-center">
-      <div className="max-w-md w-full bg-base-200 p-6 rounded-lg shadow-lg">
-        <h1 className="text-4xl font-bold">Login</h1>
+    <main className="p-6 bg-base-200 text-base-content h-screen flex justify-center items-center">
+      <div className="max-w-md w-full bg-base-100 p-6 rounded-lg shadow-lg border border-base-content/20">
+        <h1 className="text-4xl font-bold">Sign In</h1>
         {error && <div className="text-red-500 mt-2">{error}</div>}
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div>
@@ -87,13 +87,13 @@ export default function LoginPage() {
           </div>
 
           <button type="submit" className="btn btn-primary w-full" disabled={loading}>
-            {loading ? "Loading..." : "Login"}
+            {loading ? "Loading..." : "Sign In"}
           </button>
         </form>
         <p className="text-center mt-4">
-          Do not have an account yet?{" "}
+          Don&apos;t have an account?{" "}
           <Link href={"/register"} className="link-primary">
-            Register Here
+            Register here
           </Link>
         </p>
       </div>

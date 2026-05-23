@@ -12,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="dark">
-      <body className="bg-base-100 flex">
+      <body className="bg-base-200 flex">
         <div className="container mx-auto">
           <AppProvider>
             <SessionWrapper>

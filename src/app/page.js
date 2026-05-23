@@ -33,14 +33,14 @@ export default function Home() {
       {session ? (
         <>
           <p>
-            Welcome, {session?.user?.username}, with id {session.user.id}
+            Hello, {session?.user?.username}!
           </p>
           <button className="btn btn-accent mt-4 ml-2">
             <Link href={"/reports"}>My Reports</Link>
           </button>
         </>
       ) : (
-        <p>Redirecting to Login Page...</p>
+        <p>Redirecting to login...</p>
       )}
     </main>
   );

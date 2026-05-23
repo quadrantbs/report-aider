@@ -19,7 +19,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-base-200 p-4 shadow-md">
+    <header className="bg-base-300 p-4 shadow-md">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold text-primary">
           <Link href="/" className="hover:text-primary-focus">
@@ -38,11 +38,22 @@ const Header = () => {
                   </Link>
                 </li>
                 <li>
+                  <div className="dropdown dropdown-end">
+                    <div tabIndex={0} role="button" className="btn btn-primary btn-outline">Reports V2</div>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                      <li><Link href="/reports-v2">All Reports</Link></li>
+                      <li><Link href="/reports-v2/schemas">Formats</Link></li>
+                      <li><Link href="/reports-v2/sources">Text Sources</Link></li>
+                      <li><Link href="/reports-v2/tokoh">Figures</Link></li>
+                    </ul>
+                  </div>
+                </li>
+                <li>
                   <Link
                     href="/reports/create"
                     className="btn btn-primary btn-outline"
                   >
-                    Create Report
+                    Create V1 Report
                   </Link>
                 </li>
                 <li>
@@ -51,7 +62,7 @@ const Header = () => {
                     className="btn btn-error"
                     disabled={loading}
                   >
-                    {loading ? "Logging out..." : "Logout"}
+                    {loading ? "Signing out..." : "Sign Out"}
                   </button>
                 </li>
               </>
@@ -62,7 +73,7 @@ const Header = () => {
                   href="/login"
                   className="btn btn-primary w-full text-left"
                 >
-                  Login
+                  Sign In
                 </Link>
               </li>
             )}
@@ -80,7 +91,7 @@ const Header = () => {
 
             <ul
               tabIndex={0}
-              className="absolute bg-base-200 p-4 rounded-lg shadow-lg right-0 mt-2 space-y-2 w-48 dropdown-content z-50"
+              className="absolute bg-base-100 p-4 rounded-lg shadow-lg right-0 mt-2 space-y-2 w-48 dropdown-content z-50"
             >
               {session && (
                 <>
@@ -90,8 +101,13 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
+                    <Link href="/reports-v2" className="block text-primary">
+                      Reports V2
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/reports/create" className="block text-primary">
-                      Create Report
+                      Create V1 Report
                     </Link>
                   </li>
                   <li>
@@ -100,7 +116,7 @@ const Header = () => {
                       className="btn btn-error w-full text-left"
                       disabled={loading}
                     >
-                      {loading ? "Logging out..." : "Logout"}
+                      {loading ? "Signing out..." : "Sign Out"}
                     </button>
                   </li>
                 </>
@@ -111,7 +127,7 @@ const Header = () => {
                     href="/login"
                     className="btn btn-primary w-full text-left"
                   >
-                    Login
+                    Masuk
                   </Link>
                 </li>
               )}

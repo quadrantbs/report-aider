@@ -41,15 +41,15 @@ export default function Register() {
         setError(data.error);
       }
     } catch (error) {
-      setError("An error occurred while registering. Please try again.");
+      setError("An error occurred during registration. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="p-6 bg-base-100 text-base-content h-screen flex justify-center items-center">
-      <div className="max-w-md w-full bg-base-200 p-6 rounded-lg shadow-lg">
+    <main className="p-6 bg-base-200 text-base-content h-screen flex justify-center items-center">
+      <div className="max-w-md w-full bg-base-100 p-6 rounded-lg shadow-lg border border-base-content/20">
         <h1 className="text-4xl font-bold">Register</h1>
         {error && <div className="text-red-500 mt-2">{error}</div>}
 
@@ -87,9 +87,9 @@ export default function Register() {
           </button>
         </form>
         <p className="text-center mt-4">
-          Already have account?{" "}
+          Already have an account?{" "}
           <Link href={"/login"} className="link-primary">
-            Login here
+            Sign in here
           </Link>
         </p>
       </div>
