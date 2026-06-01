@@ -16,7 +16,8 @@ export async function GET(req) {
     }).sort({ createdAt: -1 });
     return NextResponse.json(schemas);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -34,6 +35,7 @@ export async function POST(req) {
     await schema.save();
     return NextResponse.json(schema, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

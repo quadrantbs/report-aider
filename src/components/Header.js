@@ -49,6 +49,11 @@ const Header = () => {
                   </div>
                 </li>
                 <li>
+                  <Link href="/reports-v3" className="btn btn-primary btn-outline">
+                    Reports V3
+                  </Link>
+                </li>
+                <li>
                   <Link
                     href="/reports/create"
                     className="btn btn-primary btn-outline"
@@ -103,6 +108,11 @@ const Header = () => {
                   <li>
                     <Link href="/reports-v2" className="block text-primary">
                       Reports V2
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/reports-v3" className="block text-primary">
+                      Reports V3
                     </Link>
                   </li>
                   <li>

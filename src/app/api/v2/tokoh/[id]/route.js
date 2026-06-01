@@ -14,7 +14,8 @@ export async function GET(req, { params }) {
     if (!tokoh) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(tokoh);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -33,7 +34,8 @@ export async function PATCH(req, { params }) {
     await tokoh.save();
     return NextResponse.json(tokoh);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -48,6 +50,7 @@ export async function DELETE(req, { params }) {
     if (!tokoh) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json({ message: "Deleted" });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

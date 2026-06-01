@@ -12,7 +12,8 @@ export async function GET(req) {
     const tokoh = await Tokoh.find({ userId: token.sub }).sort({ name: 1 });
     return NextResponse.json(tokoh);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -27,6 +28,7 @@ export async function POST(req) {
     await tokoh.save();
     return NextResponse.json(tokoh, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

@@ -1,7 +1,8 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import connectToDatabase from "@/utils/db";
-import ReportV2 from "@/models/ReportV2";
+import ReportV3 from "@/models/ReportV3";
+import { validateBlocks } from "@/utils/reports-v3/validate";
 
 export async function GET(req, { params }) {
   const token = await getToken({ req });
@@ -12,10 +13,8 @@ export async function GET(req, { params }) {
   const { id } = await params;
   await connectToDatabase();
   try {
-    const report = await ReportV2.findOne({ _id: id, userId: token.sub })
-      .populate("schemaId")
-      .populate("globalSourceIds")
-      .populate("parts.sourceIds");
+    const report = await ReportV3.findOne({ _id: id, userId: token.sub })
+      .populate("globalSourceIds");
     if (!report) {
       return NextResponse.json({ error: "Report not found" }, { status: 404 });
     }
@@ -33,12 +32,33 @@ export async function PATCH(req, { params }) {
   }
 
   const { id } = await params;
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const updates = {};
+  if (body.title !== undefined) {
+    const title = typeof body.title === "string" ? body.title.trim() : "";
+    if (!title) return NextResponse.json({ error: "Title cannot be empty" }, { status: 400 });
+    updates.title = title;
+  }
+  if (body.blocks !== undefined) {
+    const result = validateBlocks(body.blocks);
+    if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
+    updates.blocks = result.blocks;
+  }
+  if (body.variables !== undefined) updates.variables = body.variables;
+  if (body.globalSourceIds !== undefined) updates.globalSourceIds = body.globalSourceIds;
+  if (body.status !== undefined) updates.status = body.status;
+
   await connectToDatabase();
   try {
-    const { title, globalSourceIds, parts, data, status, variables } = await req.json();
-    const report = await ReportV2.findOneAndUpdate(
+    const report = await ReportV3.findOneAndUpdate(
       { _id: id, userId: token.sub },
-      { $set: { title, globalSourceIds, parts, data, status, variables } },
+      { $set: updates },
       { new: true, runValidators: true }
     );
     if (!report) {
@@ -60,10 +80,7 @@ export async function DELETE(req, { params }) {
   const { id } = await params;
   await connectToDatabase();
   try {
-    const report = await ReportV2.findOneAndDelete({
-      _id: id,
-      userId: token.sub,
-    });
+    const report = await ReportV3.findOneAndDelete({ _id: id, userId: token.sub });
     if (!report) {
       return NextResponse.json({ error: "Report not found" }, { status: 404 });
     }

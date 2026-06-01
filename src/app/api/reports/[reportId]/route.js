@@ -22,7 +22,7 @@ export async function GET(req, { params }) {
       );
     }
 
-    const report = await Report.findById(reportId);
+    const report = await Report.findOne({ _id: reportId, userId: token.id });
 
     if (!report) {
       return NextResponse.json(
@@ -59,7 +59,17 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    await Report.findByIdAndDelete(reportId);
+    const deleted = await Report.findOneAndDelete({
+      _id: reportId,
+      userId: token.id,
+    });
+
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, message: "Report not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ success: true, message: "Report deleted" });
   } catch (error) {
@@ -105,22 +115,33 @@ export async function PUT(req, { params }) {
       );
     }
 
-    await Report.findByIdAndUpdate(reportId, {
-      areaOfReport,
-      to,
-      cc,
-      from,
-      field,
-      code,
-      subject,
-      reportDate,
-      source,
-      twoSentencesConclusion,
-      details,
-      notesRecap,
-      notesToDo,
-      notesMonitoring,
-    });
+    const updated = await Report.findOneAndUpdate(
+      { _id: reportId, userId: token.id },
+      {
+        areaOfReport,
+        to,
+        cc,
+        from,
+        field,
+        code,
+        subject,
+        reportDate,
+        source,
+        twoSentencesConclusion,
+        details,
+        notesRecap,
+        notesToDo,
+        notesMonitoring,
+      },
+      { runValidators: true }
+    );
+
+    if (!updated) {
+      return NextResponse.json(
+        { success: false, message: "Report not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ success: true, message: "Report updated" });
   } catch (error) {

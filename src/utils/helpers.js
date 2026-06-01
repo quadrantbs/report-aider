@@ -16,6 +16,10 @@ export function addTrailingDot(str) {
   return str;
 }
 
+export function escapeRegExp(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export function isDetailsEmpty(details) {
   return details.every(
     (row) => Array.isArray(row) && row.every((cell) => cell.trim() === "")

@@ -3,6 +3,7 @@ import connectToDatabase from "@/utils/db";
 import Report from "@/models/Report";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { escapeRegExp } from "@/utils/helpers";
 
 export async function GET(req) {
   const token = await getToken({ req });
@@ -27,20 +28,21 @@ export async function GET(req) {
     const query = { userId: new ObjectId(userId) };
 
     if (search) {
+      const safe = new RegExp(escapeRegExp(search), "i");
       query.$or = [
-        { subject: new RegExp(search, "i") },
-        { description: new RegExp(search, "i") },
-        { to: new RegExp(search, "i") },
-        { from: new RegExp(search, "i") },
-        { field: new RegExp(search, "i") },
-        { code: new RegExp(search, "i") },
-        { source: { $elemMatch: { name: new RegExp(search, "i") } } },
-        { twoSentencesConclusion: new RegExp(search, "i") },
-        { details: { $elemMatch: { $regex: new RegExp(search, "i") } } },
-        { notesRecap: new RegExp(search, "i") },
-        { notesToDo: new RegExp(search, "i") },
-        { notesMonitoring: new RegExp(search, "i") },
-        { areaOfReport: new RegExp(search, "i") },
+        { subject: safe },
+        { description: safe },
+        { to: safe },
+        { from: safe },
+        { field: safe },
+        { code: safe },
+        { source: { $elemMatch: { name: safe } } },
+        { twoSentencesConclusion: safe },
+        { details: { $elemMatch: { $regex: safe } } },
+        { notesRecap: safe },
+        { notesToDo: safe },
+        { notesMonitoring: safe },
+        { areaOfReport: safe },
       ];
     }
 

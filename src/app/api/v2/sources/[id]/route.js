@@ -18,7 +18,8 @@ export async function GET(req, { params }) {
     }
     return NextResponse.json(source);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -42,7 +43,8 @@ export async function PATCH(req, { params }) {
     }
     return NextResponse.json(source);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -64,6 +66,7 @@ export async function DELETE(req, { params }) {
     }
     return NextResponse.json({ message: "Source deleted" });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

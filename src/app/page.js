@@ -9,9 +9,6 @@ export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    if (session) location.reload()
-  }, []);
 
   useEffect(() => {
     if (status === "unauthenticated") {
